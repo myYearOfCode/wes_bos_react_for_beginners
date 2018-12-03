@@ -28,7 +28,7 @@ class App extends React.Component {
 
   componentDidUpdate(){
     localStorage.setItem(this.props.match.params.storeId, JSON.stringify(this.state.order));
-    console.log('it updated!')
+    // console.log('it updated!')
   }
 
   componentWillUnmount(){
@@ -36,7 +36,7 @@ class App extends React.Component {
   }
 
   addFish = fish => {
-    console.log(`${fish}`);
+    // console.log(`${fish}`);
     // take a copy of our existing state
     const fishes = { ...this.state.fishes };
     // add our new fish to the state copy
@@ -44,6 +44,19 @@ class App extends React.Component {
     // update the state to the new state
     this.setState({fishes});
   }
+
+  updateFish = (key, updatedFish) => {
+    const fishes = { ...this.state.fishes };
+    fishes[key] = updatedFish;
+    this.setState({ fishes });
+  }
+
+  deleteFish = (key) => {
+    const fishes = { ...this.state.fishes }
+    fishes[key] = null
+    this.setState({ fishes })
+  }
+
   loadSampleFishes = () => {
     this.setState({fishes: sampleFishes})
   }
@@ -55,6 +68,14 @@ class App extends React.Component {
     // call setstate to update our state Object
     this.setState({ order })
   }
+
+  deleteFromOrder = key => {
+    const order = {...this.state.order };
+    delete order[key];
+    // console.dir(order)
+    this.setState({ order });
+  }
+
   render() {
     return (
       <div className="catch-of-the-day">
@@ -70,8 +91,19 @@ class App extends React.Component {
               />))}
           </ul>
         </div>
-        <Order fishes={this.state.fishes} order={this.state.order}/>
-        <Inventory fishHandler={this.addFish} loadSampleFishes={this.loadSampleFishes}/>
+        <Order
+          fishes={this.state.fishes}
+          order={this.state.order}
+          // index={key}
+          deleteFromOrder={this.deleteFromOrder}
+        />
+        <Inventory
+          deleteFish={this.deleteFish}
+          fishHandler={this.addFish}
+          loadSampleFishes={this.loadSampleFishes}
+          fishes = {this.state.fishes}
+          updateFish = {this.updateFish}
+        />
       </div>
     )
   }

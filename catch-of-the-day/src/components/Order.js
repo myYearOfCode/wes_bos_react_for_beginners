@@ -2,22 +2,24 @@ import React from "react";
 import { formatPrice } from "../helpers";
 
 class Order extends React.Component {
-renderOrder = key => {
-  const fish = this.props.fishes[key];
-  const count = this.props.order[key];
-  if (!fish) return null;
-  const isAvailable = fish.status === 'available';
-  // if fish is not loaded, return a blank element
-  if (!isAvailable) {
-  return <li key={key}>Sorry {fish ? fish.name : "fish"} is no longer available</li>;
-}
-  return (<li key={key}>
+  renderOrder = key => {
+    const fish = this.props.fishes[key];
+    const count = this.props.order[key];
+    if (!fish) return null;
+    const isAvailable = fish.status === 'available';
+    // if fish is not loaded, return a blank element
+    if (!isAvailable) {
+      return <li key={key}>Sorry {fish ? fish.name : "fish"} is no longer available</li>;
+    }
+    return (
+      <li key={key}>
+      {count} lbs {fish.name }
+      {formatPrice(count * fish.price)}
+      <button onClick={() => this.props.deleteFromOrder(key)}>&times;</button>
+      {/* idk why this needed to be not a type="button" for it to work */}
+      </li>)
+  }
 
-  {count} lbs {fish.name}
-  {formatPrice(count * fish.price)}
-</li>)
-
-}
   render() {
     const orderIds = Object.keys(this.props.order)
     const total = orderIds.reduce((prevTotal, key) => {
@@ -38,6 +40,7 @@ renderOrder = key => {
         <div className="total">
           <strong>{formatPrice(total)}</strong>
         </div>
+
       </div>
     )
   }
